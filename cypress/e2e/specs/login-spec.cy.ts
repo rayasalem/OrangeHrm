@@ -1,9 +1,80 @@
+import { defineConfig } from "cypress";
+import LoginPage from "cypress/support/pages/LoginPage";
+import { CREDENTIALS,EMPLOYEE } from "cypress/support/helper/Constant";
+ const Login=new LoginPage();
 
-describe('OrangeHRM Login Tests', () => {
+ 
+describe('OrangeHRM Full Test Suite', () => {
 
-  it('should login successfully with valid credentials', () => {
+  beforeEach(() => {
+    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+  });
+
+  it('should login with valid credentials', () => {
+   Login.login(CREDENTIALS.valid.username,CREDENTIALS.valid.password);
+        cy.url().should('include', '/dashboard');
+    cy.contains('PIM').should('be.visible');
 
 
+  });
+
+  it('should fail with invalid password', () => {
+Login.invalidPassword(CREDENTIALS.invalidPassword.username,CREDENTIALS.invalidPassword.password);
+    cy.get('.oxd-alert-content-text').should('be.visible')
+      .and('contain', 'Invalid credentials');
+  });
+
+  it('should fail with invalid username', () => {
+Login.invalidUsername(CREDENTIALS.invalidUsername.username,CREDENTIALS.invalidUsername.password);
+     cy.get('.oxd-alert-content-text').should('be.visible')
+      .and('contain', 'Invalid credentials');
+  });
+
+it('should delete second employee if exists, then add a new employee with login details', () => {
+
+    cy.get('input[placeholder="Username"]').type('Admin');
+    cy.get('input[placeholder="Password"]').type('admin123');
+    cy.get('button[type="submit"]').click();
+
+    cy.url().should('include', '/dashboard');
+
+    cy.contains('PIM').click();
+    cy.contains('Employee List').click();
+
+    cy.get('input[placeholder="Type for hints..."]').first().type('rayassss');
+    cy.get('button.oxd-button.oxd-button--medium.oxd-button--secondary.orangehrm-left-space[type="submit"]').click();
+
+    cy.get('div.oxd-table-body').then($body => {
+      if ($body.find('.oxd-table-row').length >= 2) {
+        cy.get('.oxd-table-row').eq(1).within(() => {
+          cy.get('.oxd-icon.bi-trash').should('be.visible').click();
+        });
+
+        cy.get('button.oxd-button.oxd-button--medium.oxd-button--label-danger.orangehrm-button-margin')
+          .contains('Yes, Delete')
+          .click();
+
+        cy.wait(2000);
+      }
+    });
+
+    cy.contains('Add').click();
+
+    cy.get('input[placeholder="First Name"]').type('Raya');
+    cy.get('input[placeholder="Last Name"]').type('Salem');
+    cy.get('input.oxd-input.oxd-input--active').eq(3).type('12245');
+
+    cy.get('input[type="checkbox"]').check({ force: true });
+
+    cy.get('.oxd-input').filter('[autocomplete="off"]').eq(0).type('rayassss');
+    cy.get('.oxd-input').filter('[autocomplete="off"]').eq(1).type('StrongPass123!');
+    cy.get('.oxd-input').filter('[autocomplete="off"]').eq(2).type('StrongPass123!');
+
+
+
+    cy.contains('Save').click();
+
+    cy.contains('Raya Salem', { timeout: 10000 }).should('be.visible');
   });
 
 });
