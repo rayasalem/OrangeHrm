@@ -1,18 +1,33 @@
 import LoginPage from "cypress/support/pages/LoginPage";
+<<<<<<< HEAD
 import { CREDENTIALS, EMPLOYEE } from "cypress/support/helper/Constant";
 
 const login = new LoginPage();
 
 describe('OrangeHRM - Search by Employee ID, delete if exists then add new employee', () => {
+=======
+import AddEmployee from "cypress/support/pages/PIM/AddEmployee";
+import { CREDENTIALS, EMPLOYEE } from "cypress/support/helper/Constant";
+
+const login = new LoginPage();
+const addEmployee = new AddEmployee();
+
+describe('OrangeHRM - Delete second employee then add a new one', () => {
+>>>>>>> c0fb6725698cfb274b85ca4619446d7c20bc759c
   beforeEach(() => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
   });
 
+<<<<<<< HEAD
   it('should search by Employee ID, delete if exists, then add new employee', () => {
+=======
+  it('should delete second employee if exists, then add a new employee with login details', () => {
+>>>>>>> c0fb6725698cfb274b85ca4619446d7c20bc759c
     login.login(CREDENTIALS.valid.username, CREDENTIALS.valid.password);
     cy.url().should('include', '/dashboard');
     cy.contains('PIM').should('be.visible');
 
+<<<<<<< HEAD
     cy.contains('PIM').click();
     cy.contains('Employee List').click();
 
@@ -40,5 +55,15 @@ describe('OrangeHRM - Search by Employee ID, delete if exists then add new emplo
 
     cy.contains('button', 'Save').click();
     cy.contains(`${EMPLOYEE.firstName} ${EMPLOYEE.lastName}`, { timeout: 10000 }).should('be.visible');
+=======
+    addEmployee.addNewEmployee(
+      EMPLOYEE.username,
+      EMPLOYEE.password,
+      EMPLOYEE.firstName,
+      EMPLOYEE.lastName,
+      EMPLOYEE.employeeId,
+      EMPLOYEE.fullName
+    );
+>>>>>>> c0fb6725698cfb274b85ca4619446d7c20bc759c
   });
 });
