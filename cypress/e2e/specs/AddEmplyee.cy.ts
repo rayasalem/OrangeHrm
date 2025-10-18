@@ -43,6 +43,7 @@ describe('OrangeHRM - Delete by Employee ID if exists then add new employee', ()
         addNewEmployee.addEmployeeViaApi(emp.firstName,emp.lastName,emp.employeeId);
 addNewEmployee.addMultipleEmployees(5);
         Leave.addEmployeeAndAssignLeave();
+        Leave.addMultipleEmployees();
 
 
   });
