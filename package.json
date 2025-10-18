@@ -14,14 +14,11 @@
   "description": "",
   "devDependencies": {
     "@eslint/js": "^9.26.0",
-<<<<<<< HEAD
-    "@shelex/cypress-allure-plugin": "^2.41.2",
-    "allure-commandline": "^2.34.1",
-=======
+    "@faker-js/faker": "^10.1.0",
     "@shelex/cypress-allure-plugin": "^2.41.1",
->>>>>>> c0fb6725698cfb274b85ca4619446d7c20bc759c
     "cypress": "^14.3.3",
     "cypress-cucumber-preprocessor": "^4.3.1",
+    "cypress-plugin-api": "^2.11.2",
     "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-cypress": "^4.3.0",

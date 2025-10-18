@@ -1,5 +1,6 @@
-class AddEmployee {
 
+import { faker } from '@faker-js/faker';
+class AddEmployee {
   elements = {
     searchSide: {
       searchInput: () => cy.get('input[placeholder="Type for hints..."]').first(),
@@ -22,43 +23,92 @@ class AddEmployee {
     },
   };
 
-  addNewEmployee(
-    username: string,
-    password: string,
-    firstName: string,
-    lastName: string,
-    employeeId: string,
-    fullName: string
-  ) {
-    cy.contains('PIM').click();
-    cy.contains('Employee List').click();
+ addNewEmployee(
+  firstName: string,
+  lastName: string,
+  employeeId: string
+) {
+  cy.contains('PIM').click();
+  cy.contains('Employee List').click();
 
-    this.elements.searchSide.searchInput().type(username);
-    this.elements.searchSide.searchButton().click();
+  cy.get('input.oxd-input.oxd-input--active').eq(1).clear().type(employeeId);
+  cy.get('button[type="submit"]').filter(':visible').first().click();
 
-    this.elements.searchSide.tableBody().then($body => {
-      if ($body.find('.oxd-table-row').length >= 2) {
-        this.elements.searchSide.secondRowTrashIcon().should('be.visible').click();
-        this.elements.searchSide.confirmDeleteBtn().click();
-        cy.wait(2000);
-      }
+  function deleteRow(index: number) {
+    if (index >= 3) return;
+    cy.get('div.oxd-table-body').then($body => {
+      const rows = $body.find('.oxd-table-row');
+      if (rows.length === 0) return;
+      if (index >= rows.length) return;
+
+      cy.wrap(rows.eq(index)).within(() => {
+        cy.get('.oxd-icon.bi-trash').click({ force: true });
+      });
+
+      cy.get('button.oxd-button--label-danger').contains('Yes, Delete').click();
+      cy.contains('Successfully Deleted').should('be.visible');
+      cy.wait(1000);
+      deleteRow(index);
     });
+  }
 
-    this.elements.addSide.addButton().click();
+  deleteRow(0);
 
-    this.elements.addSide.firstNameInput().type(firstName);
-    this.elements.addSide.lastNameInput().type(lastName);
-    this.elements.addSide.employeeIdInput().clear().type(employeeId);
-    this.elements.addSide.createLoginDetailsCheckbox().check({ force: true });
+  this.elements.addSide.addButton().click();
 
-    this.elements.addSide.usernameInput().type(username);
-    this.elements.addSide.passwordInput().type(password);
-    this.elements.addSide.confirmPasswordInput().type(password);
+  this.elements.addSide.firstNameInput().type(firstName);
+  this.elements.addSide.lastNameInput().type(lastName);
+  this.elements.addSide.employeeIdInput().clear().type(employeeId);
 
-    this.elements.addSide.saveButton().click();
+  this.elements.addSide.saveButton().click();
 
-    this.elements.addSide.employeeFullNameLabel(fullName).should('be.visible');
+  this.elements.addSide.employeeFullNameLabel(`${firstName} ${lastName}`).should('be.visible');
+}
+
+  addEmployeeViaApi(firstName, lastName, employeeId) {
+    return cy.api({
+      method: "POST",
+      url: "/web/index.php/api/v2/pim/employees",
+      body: { firstName, lastName, employeeId },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+
+      const empNumber = response.body.data.empNumber;
+      cy.log(` Employee added successfully via API`);
+      cy.log(`Name: ${firstName} ${lastName}`);
+      cy.log(`Employee ID: ${employeeId}`);
+      cy.log(`empNumber: ${empNumber}`);
+
+     
+      return this.deleteEmployeeViaApi(empNumber);
+    });
+  }
+
+  deleteEmployeeViaApi(empNumber) {
+    return cy.api({
+      method: "DELETE",
+      url: `/web/index.php/api/v2/pim/employees`,
+      body: { ids: [empNumber] },
+    }).then((response) => {
+      expect(response.status).to.eq(200);
+      cy.log(" Employee deleted successfully via API");
+    });
+  }
+  
+addMultipleEmployees(count: number) {
+  for (let i = 1; i <= count; i++) {
+    const firstName = faker.person.firstName();
+    const lastName = faker.person.lastName();
+    const employeeId = faker.string.alphanumeric(6).toUpperCase();
+
+    this.addEmployeeViaApi(firstName, lastName, employeeId);
+
   }
 }
+
+
+  
+}
+
 
 export default AddEmployee;

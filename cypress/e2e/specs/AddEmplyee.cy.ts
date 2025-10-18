@@ -1,69 +1,49 @@
+import { faker } from '@faker-js/faker';
 import LoginPage from "cypress/support/pages/LoginPage";
-<<<<<<< HEAD
-import { CREDENTIALS, EMPLOYEE } from "cypress/support/helper/Constant";
-
-const login = new LoginPage();
-
-describe('OrangeHRM - Search by Employee ID, delete if exists then add new employee', () => {
-=======
+import { CREDENTIALS } from "cypress/support/helper/Constant";
 import AddEmployee from "cypress/support/pages/PIM/AddEmployee";
-import { CREDENTIALS, EMPLOYEE } from "cypress/support/helper/Constant";
+import EmployeeManager from 'cypress/support/pages/PIM/emplyeeManger';
+const  addNewEmployee=new AddEmployee();
 
 const login = new LoginPage();
-const addEmployee = new AddEmployee();
+const Leave=new  EmployeeManager();
 
-describe('OrangeHRM - Delete second employee then add a new one', () => {
->>>>>>> c0fb6725698cfb274b85ca4619446d7c20bc759c
+describe('OrangeHRM - Delete by Employee ID if exists then add new employee', () => {
+
+  const employees = [];
+
+  before(() => {
+    for (let i = 0; i < 5; i++) {
+      const firstName = faker.person.firstName();
+      const lastName = faker.person.lastName();
+      const employeeId = faker.number.int({ min: 1000, max: 9999 }).toString();
+      const username = faker.internet.username({ firstName, lastName });
+      const password = faker.internet.password({ length: 12 });
+      employees.push({ firstName, lastName, employeeId, username, password });
+    }
+  });
+
   beforeEach(() => {
     cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
   });
 
-<<<<<<< HEAD
-  it('should search by Employee ID, delete if exists, then add new employee', () => {
-=======
-  it('should delete second employee if exists, then add a new employee with login details', () => {
->>>>>>> c0fb6725698cfb274b85ca4619446d7c20bc759c
-    login.login(CREDENTIALS.valid.username, CREDENTIALS.valid.password);
-    cy.url().should('include', '/dashboard');
-    cy.contains('PIM').should('be.visible');
+  it('should delete employee by ID if exists then add new employee', () => {
+    cy.loginWithAdmin();
+        const emp = employees[0];
 
-<<<<<<< HEAD
-    cy.contains('PIM').click();
+
+    cy.contains('PIM').should('be.visible').click();
+
     cy.contains('Employee List').click();
 
-    cy.get('input.oxd-input.oxd-input--active').eq(1).clear().type(EMPLOYEE.employeeId);
-    cy.get('button[type="submit"]').filter(':visible').first().click();
 
-    cy.get('div.oxd-table-body').then($body => {
-      const rows = $body.find('.oxd-table-row');
-      if (rows.length > 0) {
-        cy.wrap(rows.eq(0)).find('.oxd-icon.bi-trash').click({ force: true });
-        cy.get('button.oxd-button--label-danger').contains('Yes, Delete').click();
-        cy.contains('Successfully Deleted').should('be.visible');
-      }
-    });
+      
+   
 
-    cy.contains('button', 'Add').click();
-    cy.get('input[placeholder="First Name"]').type(EMPLOYEE.firstName);
-    cy.get('input[placeholder="Last Name"]').type(EMPLOYEE.lastName);
-    cy.get('input.oxd-input.oxd-input--active').eq(3).clear().type(EMPLOYEE.employeeId);
+        addNewEmployee.addEmployeeViaApi(emp.firstName,emp.lastName,emp.employeeId);
+addNewEmployee.addMultipleEmployees(5);
+        Leave.addEmployeeAndAssignLeave();
 
-    cy.get('input[type="checkbox"]').first().check({ force: true });
-    cy.get('.oxd-input[autocomplete="off"]').eq(0).type(EMPLOYEE.username);
-    cy.get('.oxd-input[autocomplete="off"]').eq(1).type(EMPLOYEE.password);
-    cy.get('.oxd-input[autocomplete="off"]').eq(2).type(EMPLOYEE.password);
 
-    cy.contains('button', 'Save').click();
-    cy.contains(`${EMPLOYEE.firstName} ${EMPLOYEE.lastName}`, { timeout: 10000 }).should('be.visible');
-=======
-    addEmployee.addNewEmployee(
-      EMPLOYEE.username,
-      EMPLOYEE.password,
-      EMPLOYEE.firstName,
-      EMPLOYEE.lastName,
-      EMPLOYEE.employeeId,
-      EMPLOYEE.fullName
-    );
->>>>>>> c0fb6725698cfb274b85ca4619446d7c20bc759c
   });
 });
