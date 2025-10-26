@@ -7,7 +7,8 @@
     "cypress:open": "cypress open",
     "clean": "rimraf cypress/videos cypress/screenshots",
     "lint": "eslint \"cypress/**/*.ts\" --fix",
-    "lint:check": "eslint \"cypress/**/*.ts\""
+    "lint:check": "eslint \"cypress/**/*.ts\"",
+    "cypress-run-addEmployee": "cypress run --browser electron --spec .\\cypress\\e2e\\specs\\AddEmplyee.cy.ts"
   },
   "author": "Malik.Mlitat",
   "license": "ISC",
@@ -16,7 +17,7 @@
     "@eslint/js": "^9.26.0",
     "@faker-js/faker": "^10.1.0",
     "@shelex/cypress-allure-plugin": "^2.41.1",
-    "cypress": "^14.3.3",
+    "cypress": "^14.5.4",
     "cypress-cucumber-preprocessor": "^4.3.1",
     "cypress-plugin-api": "^2.11.2",
     "eslint": "^9.26.0",

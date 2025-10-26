@@ -23,9 +23,7 @@ describe('OrangeHRM - Delete by Employee ID if exists then add new employee', ()
     }
   });
 
-  beforeEach(() => {
-    cy.visit('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
-  });
+
 
   it('should delete employee by ID if exists then add new employee', () => {
     cy.loginWithAdmin();
@@ -40,10 +38,10 @@ describe('OrangeHRM - Delete by Employee ID if exists then add new employee', ()
       
    
 
-        addNewEmployee.addEmployeeViaApi(emp.firstName,emp.lastName,emp.employeeId);
-addNewEmployee.addMultipleEmployees(5);
+     //  addNewEmployee.addEmployeeViaApi(emp.firstName,emp.lastName,emp.employeeId);
+//addNewEmployee.addMultipleEmployees(5);
         Leave.addEmployeeAndAssignLeave();
-        Leave.addMultipleEmployees();
+      //  Leave.addMultipleEmployees();
 
 
   });

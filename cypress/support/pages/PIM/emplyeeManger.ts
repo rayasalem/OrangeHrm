@@ -8,13 +8,27 @@ class EmployeeManager {
     const employeeId = faker.string.alphanumeric(6).toUpperCase();
     const fullName = `${firstName} ${lastName}`;
 
+    cy.wrap({ firstName, lastName, employeeId, fullName }).as('employeeData');
+
     return cy.api({
       method: "POST",
       url: "/web/index.php/api/v2/pim/employees",
       body: { firstName, lastName, employeeId },
-    }).then((response) => {
+    }).as('loginrequest')
+    .then((response) => {
       expect(response.status).to.eq(200);
-      cy.log(`Employee added via API: ${fullName} (${employeeId})`);
+      cy.log(`Employee added via API: ${fullName} (${employeeId})`
+
+      );
+            
+    
+
+ 
+
+cy.get('@employeeData').then((employee) => {
+  cy.log('First Name: ' + employee);
+ 
+});
 
       cy.contains('a.oxd-main-menu-item', 'Leave').click({ force: true });
       cy.contains('Entitlements').click();
