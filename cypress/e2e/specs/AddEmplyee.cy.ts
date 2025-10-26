@@ -3,10 +3,10 @@ import LoginPage from "cypress/support/pages/LoginPage";
 import { CREDENTIALS } from "cypress/support/helper/Constant";
 import AddEmployee from "cypress/support/pages/PIM/AddEmployee";
 import EmployeeManager from 'cypress/support/pages/PIM/emplyeeManger';
-const  addNewEmployee=new AddEmployee();
+const addNewEmployee = new AddEmployee();
 
 const login = new LoginPage();
-const Leave=new  EmployeeManager();
+const Leave = new EmployeeManager();
 
 describe('OrangeHRM - Delete by Employee ID if exists then add new employee', () => {
 
@@ -27,21 +27,25 @@ describe('OrangeHRM - Delete by Employee ID if exists then add new employee', ()
 
   it('should delete employee by ID if exists then add new employee', () => {
     cy.loginWithAdmin();
-        const emp = employees[0];
+    const emp = employees[0];
+    const InputPost="dddd";
+
+    cy.contains('Buzz').should('be.visible').click();
+
+    cy.get('.oxd-buzz-post-input')
+      .type(InputPost);
+
+    cy.get('.oxd-button').contains('Post').click();
+    cy.contains('Successfully Saved').should('be.visible');
 
 
-    cy.contains('PIM').should('be.visible').click();
-
-    cy.contains('Employee List').click();
 
 
-      
-   
 
-     //  addNewEmployee.addEmployeeViaApi(emp.firstName,emp.lastName,emp.employeeId);
-//addNewEmployee.addMultipleEmployees(5);
-        Leave.addEmployeeAndAssignLeave();
-      //  Leave.addMultipleEmployees();
+    //  addNewEmployee.addEmployeeViaApi(emp.firstName,emp.lastName,emp.employeeId);
+    //addNewEmployee.addMultipleEmployees(5);
+    //    Leave.addEmployeeAndAssignLeave();
+    //  Leave.addMultipleEmployees();
 
 
   });
