@@ -28,22 +28,14 @@ describe('OrangeHRM - Delete by Employee ID if exists then add new employee', ()
   it('should delete employee by ID if exists then add new employee', () => {
     cy.loginWithAdmin();
     const emp = employees[0];
-    const InputPost="dddd";
-
-    cy.contains('Buzz').should('be.visible').click();
-
-    cy.get('.oxd-buzz-post-input')
-      .type(InputPost);
-
-    cy.get('.oxd-button').contains('Post').click();
-    cy.contains('Successfully Saved').should('be.visible');
 
 
 
 
 
-    //  addNewEmployee.addEmployeeViaApi(emp.firstName,emp.lastName,emp.employeeId);
-    //addNewEmployee.addMultipleEmployees(5);
+
+    //addNewEmployee.addEmployeeViaApi(emp.firstName,emp.lastName,emp.employeeId);
+    addNewEmployee.addMultipleEmployees(5);
     //    Leave.addEmployeeAndAssignLeave();
     //  Leave.addMultipleEmployees();
 
