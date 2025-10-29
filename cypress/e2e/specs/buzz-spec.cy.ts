@@ -13,12 +13,17 @@ describe('OrangeHRM - Add and verify 5 multilingual posts in Buzz', () => {
       "Hallo zusammen! Einen schönen Tag noch! 🌞"
     ];
 
+    // افتح صفحة Buzz مرة واحدة
     BuzzPage.openBuzzPage();
 
+    // حذف كل المنشورات القديمة مرة واحدة قبل البدء
+    BuzzPage.deleteAllPostsIfExist();
+
+    // أضف وتحقق من كل منشور
     posts.forEach((post) => {
       BuzzPage.addPost(post);
       BuzzPage.verifyLastPost(post);
-      cy.wait(1000);
+      cy.wait(1000); // تأخير بسيط بين المنشورات لتفادي تداخل XHR
     });
   });
 });
