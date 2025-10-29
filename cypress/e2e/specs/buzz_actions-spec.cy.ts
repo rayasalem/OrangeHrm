@@ -1,22 +1,23 @@
-import BuzzPage from 'cypress/support/pages/buzz/BuzzPage';
-import BuzzLikePage from 'cypress/support/pages/buzz/BuzzLikePage';
-import BuzzComment from 'cypress/support/pages/buzz/BuzzComment';
+import BuzzActionsPage from "cypress/support/pages/buzz/BuzzActionsPage";
+import BuzzPage from "cypress/support/pages/buzz/BuzzPage";
+describe('OrangeHRM - Buzz Actions', () => {
 
-describe('OrangeHRM - Buzz actions (Post, Like, Comment)', () => {
+  it('should create post, add comment, like and remove like', () => {
+    cy.loginWithAdmin(); // تسجيل الدخول
+ BuzzPage.openBuzzPage();
+    const postText = "Hello everyone! Have a great day! 🌞";
+    const commentText = "Nice post! 👍";
 
-  it('should add a post, like it, and comment on it', () => {
-    cy.loginWithAdmin();
+    // إنشاء بوست جديد
+    BuzzActionsPage.createNewPost(postText);
 
-    const postText = "Testing Buzz actions 💬👍";
-    const commentText = "Nice post! 🚀";
+    // إضافة تعليق لأول بوست (index = 0)
+    BuzzActionsPage.addCommentToPost(0, commentText);
 
-    BuzzPage.openBuzzPage();
+    // إضافة لايك لأول بوست
+    BuzzActionsPage.addLikeToPost(0);
 
-    BuzzPage.addPost(postText);
-    BuzzPage.verifyLastPost(postText);
-
-    BuzzLikePage.addLikeToFirstPost();
-
-    BuzzComment.addCommentToFirstPost(commentText);
+    // إزالة اللايك لأول بوست
+    BuzzActionsPage.removeLikeFromPost(0);
   });
 });

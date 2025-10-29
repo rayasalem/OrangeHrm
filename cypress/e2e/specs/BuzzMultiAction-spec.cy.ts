@@ -1,7 +1,7 @@
 import AddEmployee from "cypress/support/pages/PIM/AddEmployee";
 import BuzzPage from "cypress/support/pages/buzz/BuzzPage";
 import BuzzLikePage from "cypress/support/pages/buzz/BuzzLikePage";
-import BuzzComment from "cypress/support/pages/buzz/BuzzComment";
+import BuzzComment from "cypress/support/pages/buzz/BuzzActionsPage";
 import { faker } from "@faker-js/faker";
 
 describe('OrangeHRM - 5 Employees Like & Comment on Same Post', () => {
