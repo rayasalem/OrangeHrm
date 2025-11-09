@@ -10,6 +10,12 @@ export default defineConfig({
       return config;
     },
     baseUrl: 'https://opensource-demo.orangehrmlive.com',
-    supportFile: "cypress/support/e2e.ts"
+        
+
+    retries:{
+      runMode:1,
+      openMode:5,
+    }
+
   },
 });

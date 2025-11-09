@@ -14,7 +14,10 @@ describe("Add 5 Employees with Faker Pictures + View Profile", () => {
   const createdEmployeeIds: string[] = [];
 
   before(() => {
-    cy.loginWithAdmin();
+ //   cy.loginWithAdmin();
+ cy.visit('/');
+ cy.checkLink("OrangeHRM, Inc","http://www.orangehrm.com");
+    cy.loginwith();
   });
 
   it("Add employees with Faker pictures and view profile", () => {
@@ -55,10 +58,6 @@ describe("Add 5 Employees with Faker Pictures + View Profile", () => {
     });
   });
 
-  it("Show all created employee IDs", () => {
-    cy.log("All Employees Created:");
-    createdEmployeeIds.forEach((id, index) => {
-      cy.log(`Employee ${index + 1}: ${id}`);
-    });
-  });
+
+
 });
