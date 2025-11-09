@@ -1,29 +1,49 @@
-import BuzzPage from "cypress/support/pages/buzz/BuzzPage";
+import LoginPage from "../../support/pages/LoginPage";
+import { BuzzSelectors } from "cypress/support/pages/buzz/BuzzSelectores";
 
-describe('OrangeHRM - Add and verify 5 multilingual posts in Buzz', () => {
+const login = new LoginPage();
 
-  it('should add 5 posts with the same meaning in different languages and verify them', () => {
-    cy.loginWithAdmin();
+describe("Filter and Like Specific Buzz Post", () => {
 
-    const posts = [
-      "Hello everyone! Have a great day! 🌞",
-      "مرحباً بالجميع! أتمنى لكم يوماً رائعاً! 🌞",
-      "Bonjour à tous ! Passez une excellente journée ! 🌞",
-      "¡Hola a todos! ¡Que tengan un gran día! 🌞",
-      "Hallo zusammen! Einen schönen Tag noch! 🌞"
-    ];
+  const postText = "raya";
 
-    // افتح صفحة Buzz مرة واحدة
-    BuzzPage.openBuzzPage();
+  beforeEach(() => {
+     cy.loginWithAdmin();
 
-    // حذف كل المنشورات القديمة مرة واحدة قبل البدء
-    BuzzPage.deleteAllPostsIfExist();
+    cy.get(BuzzSelectors.TAB).click();
+  });
 
-    // أضف وتحقق من كل منشور
-    posts.forEach((post) => {
-      BuzzPage.addPost(post);
-      BuzzPage.verifyLastPost(post);
-      cy.wait(1000); // تأخير بسيط بين المنشورات لتفادي تداخل XHR
-    });
+  it(`Should create, filter, and like the post: "${postText}"`, () => {
+    cy.get(BuzzSelectors.POST_CONTAINER, { timeout: 10000 })
+      .should("be.visible")
+      .click();
+
+    cy.get(BuzzSelectors.POST_INPUT, { timeout: 10000 })
+      .should("be.visible")
+      .type(postText, { force: true });
+
+    cy.get(BuzzSelectors.POST_SUBMIT).click({ force: true });
+
+    cy.contains(postText, { timeout: 20000 }).should("exist");
+
+    cy.contains(postText)
+      .closest(".orangehrm-buzz")
+      .as("targetPost");
+
+    cy.get("@targetPost")
+      .find("#heart-svg")
+      .scrollIntoView()
+      .click({ force: true });
+
+    cy.get("@targetPost")
+      .find("#heart-svg")
+      .should(($svg) => {
+        const isActive =
+          $svg.hasClass("active") ||
+          $svg.css("fill") !== "rgb(204, 204, 204)";
+        expect(isActive, "Heart icon should be active or colored").to.be.true;
+      });
+
+    cy.get("@targetPost").should("contain.text", postText);
   });
 });
